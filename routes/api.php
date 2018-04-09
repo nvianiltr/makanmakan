@@ -35,14 +35,14 @@ Route::resource('/IngredientDetails','IngredientDetailsController');
 Route::resource('/Payment','PaymentController');
 Route::resource('/SavedArticle','SavedArticleController');
 Route::resource('/SavedRecipe','SavedRecipeController');
+
 Route::resource('/TagDetails','TagDetailsController');
 Route::resource('/TagHeader','TagHeaderController');
 Route::resource('/TagCategory','TagCategoryController');
-
-
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 Route::post('recover', 'AuthController@recover');
+
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('logout', 'AuthController@logout');
     Route::get('test', function(){

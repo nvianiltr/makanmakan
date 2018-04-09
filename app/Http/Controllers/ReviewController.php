@@ -42,7 +42,7 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
          $data = [
-            "article_id" => $request->article_id,
+            "recipe_id" => $request->recipe_id,
             "user_id" => $request->user_id,
             "content" => $request->content,
             "datePosted" => $request->datePosted
@@ -97,7 +97,7 @@ class ReviewController extends Controller
     {
         try {
             $data = $this->data->find($id)->update([
-                "article_id" => $request->article_id,
+                "recipe_id" => $request->recipe_id,
                 "user_id" => $request->user_id,
                 "content" => $request->content,
                 "datePosted" => $request->datePosted

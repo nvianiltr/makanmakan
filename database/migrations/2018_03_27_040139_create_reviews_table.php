@@ -15,16 +15,17 @@ class CreateReviewsTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('article_id')->unsigned();
+            $table->integer('recipe_id')->unsigned();
             $table->integer('user_id')->unsigned(); // the one who leave a review
             $table->longText('content');
             $table->dateTime('datePosted');
-            $table->boolean('isDeleted')->default(0);;
+            $table->boolean('isDeleted')->default(0);
             $table->foreign('user_id')
                   ->references('id')->on('users')
+                    ->onDelete('cascade')
                   ->onUpdate('cascade');
-            $table->foreign('article_id')
-                  ->references('id')->on('articles')
+            $table->foreign('recipe_id')
+                  ->references('id')->on('recipes')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
         });
