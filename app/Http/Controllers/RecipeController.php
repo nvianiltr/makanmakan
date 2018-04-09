@@ -22,7 +22,7 @@ class RecipeController extends Controller
     public function index()
     {
         try {
-            $recipe = $this->recipe->with('tagDetails', 'ingredientDetails')->get();
+            $recipe = $this->recipe->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')->get();
             return response()->json($recipe, 200);
         }
         catch (Exception $ex) {
@@ -107,7 +107,7 @@ class RecipeController extends Controller
         try {
             $recipe = $this->recipe
                 ->where("recipes.id", "=", "$id")
-                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient')
+                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
                     'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
@@ -121,11 +121,13 @@ class RecipeController extends Controller
         }
     }
 
-    public function searchByName($name){
+    public function search($name){
         try {
-
             $recipe=$this->recipe->where('recipes.title', 'LIKE', "%$name%")
-                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient')
+                ->orWhereHas('tagDetails.tagHeader', function($query) use ($name){
+                    $query->where('name', $name);
+                })
+                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
                     'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
@@ -138,6 +140,7 @@ class RecipeController extends Controller
             return response('Failed', 400);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

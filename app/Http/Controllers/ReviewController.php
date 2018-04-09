@@ -18,6 +18,7 @@ class ReviewController extends Controller
      public function __construct(Review $data){
         $this->data = $data;
     }
+
     public function index()
     {
         return Review::all();

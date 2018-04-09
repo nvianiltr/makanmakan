@@ -27,7 +27,7 @@ Route::get('/UserwithSavedArticle/{id}','UserController@showWithSavedArticle');
 Route::get('/Recipe','RecipeController@index');
 Route::get('/Recipe/{id}','RecipeController@show');
 Route::get('/RecipeFK/{id}','RecipeController@showFK');
-Route::get('/Recipe/search/{name}','RecipeController@searchByName');
+Route::get('/Recipe/search/{name}','RecipeController@search');
 
 //Article
 Route::get('/Article','ArticleController@index');
