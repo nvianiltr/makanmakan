@@ -18,7 +18,7 @@ class CreateArticlesTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('title');
             $table->longText('content');
-            $table->string('imageURL');
+            $table->string('imageURL')->nullable();
             $table->dateTime('dateCreated');
             $table->boolean('isDeleted')->default(0);;
             $table->foreign('user_id')
