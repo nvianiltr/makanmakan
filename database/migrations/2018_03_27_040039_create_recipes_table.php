@@ -19,7 +19,7 @@ class CreateRecipesTable extends Migration
             $table->string('title');
             $table->mediumText('about')->nullable();
             $table->string('pictureURL')->nullable();
-            $table->double('servingQty',7,2);
+            $table->double('servingQty',7,2)->nullable();
             $table->enum('servingUnit', 
                 ['person','people','serving','servings',
                 'cup', 'cups', 'quart','quarts',
