@@ -102,7 +102,7 @@ class ArticleController extends Controller
          try {
             $data = $this->data->where("articles.id", "=", "$id")
                 ->join('users', 'users.id', '=', 'articles.user_id')
-                ->select('articles.id', 'articles.title', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
                 ->first();
             return response()->json($data, 200);
         }
