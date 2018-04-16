@@ -121,6 +121,24 @@ class RecipeController extends Controller
         }
     }
 
+    public function showPersonalRecipe($id){
+       try {
+            $recipe = $this->recipe
+                ->where("recipes.id", "=", "$id")
+                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
+                ->join('users', 'users.id', '=', 'recipes.user_id')
+                ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
+                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
+                    'recipes.isDeleted')
+                ->get();
+            return response()->json($recipe, 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
+            return response('Failed', 400);
+        }
+    }
+
     public function search($name){
         try {
             $recipe=$this->recipe->where('recipes.title', 'LIKE', "%$name%")

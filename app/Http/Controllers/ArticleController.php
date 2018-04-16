@@ -36,21 +36,18 @@ class ArticleController extends Controller
         //
     }
 
-    public function showFK($id)
+    public function showPersonalArticle($id)
     {
         try {
-            $idUser = Article::where('id','=',$id)->value('user_id');
-            $array['user'] = User::where('id','=',$idUser)->value('username');
-            $array['article'] =[
-            $data = $this->data->where("id", "=", "$id")->get()]; 
-
-            return response()->json($array, 200);    
-
-        } catch (Exception $ex) {
-
-            echo $ex; 
+            $data = $this->data->where("articles.user_id", "=", "$id")
+                ->join('users', 'users.id', '=', 'articles.user_id')
+                ->select('articles.id', 'articles.title', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                ->get();
+            return response()->json($data, 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
             return response('Failed', 400);
-
         }
         
     }
@@ -158,7 +155,8 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         try {
-            $data = $this->data->where("id", "=", "$id")->update(['isDeleted' => true]);;
+            //$data = $this->data->where("id", "=", "$id")->update(['isDeleted' => true]);;
+            $data = $this->data->where("id", "=", "$id")->delete();
             return response('Deleted',200);
         }
         catch(Exception $ex) {
