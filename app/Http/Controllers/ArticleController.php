@@ -157,7 +157,8 @@ class ArticleController extends Controller
         try {
             //$data = $this->data->where("id", "=", "$id")->update(['isDeleted' => true]);;
             $data = $this->data->where("id", "=", "$id")->delete();
-            return response('Deleted',200);
+//            return response('Deleted',200);
+            return response()->json([],201);
         }
         catch(Exception $ex) {
             return response($ex, 400);

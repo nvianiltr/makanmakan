@@ -113,6 +113,12 @@ class RecipeController extends Controller
                     'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
                     'recipes.isDeleted')
                 ->first();
+            // $recipe = $this->recipe
+            //         ->where('id',$id)
+            //         ->first();
+            $recipe->tagDetails;
+            $recipe->ingredientDetails;
+            $recipe->reviews;
             return response()->json($recipe, 200);
         }
         catch (Exception $ex) {
@@ -211,8 +217,10 @@ class RecipeController extends Controller
     public function destroy($id)
     {
         try {
-            $recipe = $this->recipe->where("id", "=", "$id")->update(['isDeleted' => true]);;
-            return response('Deleted',200);
+//            $recipe = $this->recipe->where("id", "=", "$id")->update(['isDeleted' => true]);;
+//            return response('Deleted',200);
+           $recipe = $this->recipe->where("id", "=", "$id")->delete();
+           return response()->json([],201);
         }
         catch(Exception $ex) {
             return response($ex, 400);
