@@ -78,11 +78,8 @@ class UserController extends Controller
             $grid->lastName();
             $grid->username();
             $grid->email();
-            $grid->isDeleted();
             $grid->isVerified();
 
-            $grid->created_at();
-            $grid->updated_at();
         });
     }
 
@@ -96,14 +93,11 @@ class UserController extends Controller
         return Admin::form(User::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->display('firstName');
-            $form->display('lastName');
+            $form->display('firstName','First Name');
+            $form->display('lastName','Last Name');
             $form->display('username');
             $form->display('email');
-            $form->display('isDeleted');
             $form->display('isVerified');
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
         });
     }
 }

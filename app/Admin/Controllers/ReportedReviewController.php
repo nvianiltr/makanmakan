@@ -97,8 +97,8 @@ class ReportedReviewController extends Controller
         return Admin::form(ReportedReview::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('Review')->options(function($review_id){ return Review::all()->pluck('content','id');});
-            $form->select('User')->options(function($user_id){ return User::all()->pluck('username','id');});
+            $form->select('review_id','Review')->options(function($review_id){ return Review::all()->pluck('content','id');});
+            $form->select('user_id','User')->options(function($user_id){ return User::all()->pluck('username','id');});
             $form->text('reason');
             $form->text('dateReported');
 

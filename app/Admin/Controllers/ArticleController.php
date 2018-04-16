@@ -79,9 +79,7 @@ class ArticleController extends Controller
                 User::find($User)->username;});
             $grid->title();
             $grid->content();
-            $grid->imageURL();
             $grid->dateCreated();
-            $grid->isDeleted();
         });
     }
 
@@ -95,12 +93,10 @@ class ArticleController extends Controller
         return Admin::form(Article::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('UserID')->options(function($user_id){ return User::all()->pluck('username','id');});
+            $form->select('user_id','User')->options(function($user_id){ return User::all()->pluck('username','id');});
             $form->text('title');
             $form->text('content');
-            $form->text('imageURL');
             $form->text('dateCreated');
-            $form->text('isDeleted');
         });
     }
 }

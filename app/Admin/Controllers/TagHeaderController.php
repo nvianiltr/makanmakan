@@ -93,7 +93,7 @@ class TagHeaderController extends Controller
         return Admin::form(TagHeader::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('TagCategory')->options(function($tc_id){ return TagCategory::all()->pluck('name','id');});
+            $form->select('tc_id','TagCategory')->options(function($tc_id){ return TagCategory::all()->pluck('name','id');});
             $form->text('name');
         
         });

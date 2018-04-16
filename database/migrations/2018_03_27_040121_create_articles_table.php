@@ -20,7 +20,6 @@ class CreateArticlesTable extends Migration
             $table->longText('content');
             $table->string('imageURL')->nullable();
             $table->dateTime('dateCreated');
-            $table->boolean('isDeleted')->default(0);;
             $table->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade')

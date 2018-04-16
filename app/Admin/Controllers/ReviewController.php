@@ -82,7 +82,6 @@ class ReviewController extends Controller
                 User::find($User)->username;});
             $grid->content();
             $grid->datePosted();
-            $grid->isDeleted();
         });
     }
 
@@ -96,11 +95,10 @@ class ReviewController extends Controller
         return Admin::form(Review::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
-            $form->select('User')->options(function($user_id){ return User::all()->pluck('username','id');});
+            $form->select('recipe_id','Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
+            $form->select('user_id','User')->options(function($user_id){ return User::all()->pluck('username','id');});
             $form->text('content');
             $form->text('datePosted');
-            $form->text('isDeleted');
         });
     }
 }

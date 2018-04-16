@@ -79,14 +79,12 @@ class RecipeController extends Controller
                 User::find($User)->username;});
             $grid->title();
             $grid->about();
-            $grid->pictureURL();
             $grid->servingQty('Serving Quantity');
             $grid->servingUnit('Serving Unit');
             $grid->preparation();
             $grid->qty('Quantity');
             $grid->price();
             $grid->dateCreated();
-            $grid->isDeleted();
         });
     }
 
@@ -100,17 +98,15 @@ class RecipeController extends Controller
         return Admin::form(Recipe::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('UserID')->options(function($user_id){ return User::all()->pluck('username','id');});
+            $form->select('user_id','User')->options(function($user_id){ return User::all()->pluck('username','id');});
             $form->text('title');
             $form->text('about');
-            $form->text('pictureURL');
             $form->text('servingQty');
             $form->text('servingUnit');
             $form->text('preparation');
-            $form->text('qty');
+            $form->text('qty','Quantity');
             $form->text('price');
             $form->text('dateCreated');
-            $form->text('isDeleted');
 
             
         });

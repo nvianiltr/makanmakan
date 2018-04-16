@@ -29,7 +29,6 @@ class CreateRecipesTable extends Migration
             $table->integer('qty')->nullable();
             $table->integer('price')->nullable();
             $table->dateTime('dateCreated');
-            $table->boolean('isDeleted')->default(0);
             $table->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade')

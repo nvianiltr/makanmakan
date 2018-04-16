@@ -207,7 +207,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            $user = $this->user->where("id", "=", "$id")->update(['isDeleted' => true]);;
+            $data = $this->data->where("id", "=", "$id")->delete();
             return response('Deleted',200);
         }
         catch(Exception $ex) {

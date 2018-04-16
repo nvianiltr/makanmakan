@@ -93,8 +93,8 @@ class TagDetailsController extends Controller
     {
         return Admin::form(TagDetails::class, function (Form $form) {
 
-            $form->select('Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
-            $form->select('Tag')->options(function($tag_id){ return TagHeader::all()->pluck('name','id');});
+            $form->select('recipe_id','Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
+            $form->select('tag_id','Tag')->options(function($tag_id){ return TagHeader::all()->pluck('name','id');});
 
         });
     }

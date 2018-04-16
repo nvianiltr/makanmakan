@@ -93,8 +93,8 @@ class IngredientDetailsController extends Controller
     {
         return Admin::form(IngredientDetails::class, function (Form $form) {
 
-            $form->select('Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
-            $form->select('Ingredient')->options(function($ingredient_id){ return Ingredient::all()->pluck('name','id');});
+            $form->select('recipe_id','Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
+            $form->select('ingredient_id','Ingredient')->options(function($ingredient_id){ return Ingredient::all()->pluck('name','id');});
             $form->text('quantity');
             $form->text('unit');
 
