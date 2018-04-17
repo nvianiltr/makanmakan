@@ -81,8 +81,9 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::resource('/Payment','PaymentController');
     Route::resource('/TransactionHeader','TransactionHeaderController');
     Route::resource('/TransactionDetails','TransactionDetailsController');
-    Route::resource('/SavedArticle','SavedArticleController');
-	Route::resource('/SavedRecipe','SavedRecipeController');
+//    Route::resource('/SavedArticle','SavedArticleController');
+//    Route::resource('/SavedArticle','SavedArticleController');
+//	Route::resource('/SavedRecipe','SavedRecipeController');
 
 	//User
 	Route::put('/User/{id}','UserController@update');
@@ -97,6 +98,11 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 	Route::post('/Article','ArticleController@store');
 	Route::put('/Article/{id}','ArticleController@update');
 	Route::delete('/Article/{id}','ArticleController@destroy');
+	Route::get('/Article/personal/{id}', 'ArticleController@getPersonalArticle');
+
+//Recipe
+	Route::get('/SavedRecipe/{id}','RecipeController@showPersonalRecipe');
+
 
 	//Review
 	Route::post('/Review','ReviewController@store');
@@ -109,19 +115,19 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 	Route::delete('/ReportedReview/{id}','ReportedReviewController@destroy');
 
 	//Ingredient
-	Route::post('/Ingredient','IngredientController@store');
-	Route::put('/Ingredient/{id}','IngredientController@update');
-	Route::delete('/Ingredient/{id}','IngredientController@destroy');
+	Route::post('/Recipe/Ingredient','IngredientController@store');
+	Route::put('/Recipe/Ingredient/{id}','IngredientController@update');
+	Route::delete('/Recipe/Ingredient/{id}','IngredientController@destroy');
 
 	//IngredientDetails
-	Route::post('/IngredientDetails','IngredientDetailsController@store');
-	Route::put('/IngredientDetails/{id}','IngredientDetailsController@update');
-	Route::delete('/IngredientDetails/{id}','IngredientDetailsController@destroy');
+	Route::post('/Recipe/IngredientDetails','IngredientDetailsController@store');
+	Route::put('/Recipe/IngredientDetails/{id}','IngredientDetailsController@update');
+	Route::delete('/Recipe/IngredientDetails/{id}','IngredientDetailsController@destroy');
 
 	//TagDetails
-	Route::post('/TagDetails','TagDetailsController@store');
-	Route::put('/TagDetails/{id}','TagDetailsController@update');
-	Route::delete('/TagDetails/{id}','TagDetailsController@destroy');
+	Route::post('/Recipe/TagDetails','TagDetailsController@store');
+	Route::put('/Recipe/TagDetails/{id}','TagDetailsController@update');
+	Route::delete('/Recipe/TagDetails/{id}','TagDetailsController@destroy');
 
 	//TagHeader
 	Route::post('/TagHeader','TagHeaderController@store');

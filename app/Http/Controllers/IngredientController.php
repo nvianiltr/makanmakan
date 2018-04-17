@@ -42,16 +42,22 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        $data = [
-            "name" => $request->name
-        ];
-        try { 
-            $data = $this->data->create($data); 
-            return response('Created',201);
-        } 
-        catch(Exception $ex) {
-            echo $ex; 
-            return response('Failed', 400);
+        $data = $this->data->where("name", "=", $request->name)->first();
+        if($data == null) {
+            $data = [
+                "name" => $request->name
+            ];
+            try {
+                $data = $this->data->create($data);
+                return response()->json($data->id,201);
+            }
+            catch(Exception $ex) {
+                echo $ex;
+                return response('Failed', 400);
+            }
+        }
+        else {
+            return response()->json($data->id,200);
         }
     }
 
