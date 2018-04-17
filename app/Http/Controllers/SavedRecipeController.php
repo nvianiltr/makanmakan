@@ -116,12 +116,12 @@ class SavedRecipeController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            $data = $this->data->where("article_id", "=", "$id")->update(['isDeleted' => true]);;
-            return response('Deleted',200);
-        }
-        catch(Exception $ex) {
-            return response($ex, 400);
-        }
+        // try {
+        //     $data = $this->data->where("article_id", "=", "$id")->update(['isDeleted' => true]);;
+        //     return response('Deleted',200);
+        // }
+        // catch(Exception $ex) {
+        //     return response($ex, 400);
+        // }
     }
 }

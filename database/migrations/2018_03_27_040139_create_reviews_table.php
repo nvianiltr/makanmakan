@@ -19,7 +19,6 @@ class CreateReviewsTable extends Migration
             $table->integer('user_id')->unsigned(); // the one who leave a review
             $table->longText('content');
             $table->dateTime('datePosted');
-            $table->boolean('isDeleted')->default(0);
             $table->foreign('user_id')
                   ->references('id')->on('users')
                     ->onDelete('cascade')

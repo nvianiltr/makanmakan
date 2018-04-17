@@ -212,6 +212,7 @@ class RecipeController extends Controller
     public function destroy($id)
     {
         try {
+
 //            $recipe = $this->recipe->where("id", "=", "$id")->update(['isDeleted' => true]);;
 //            return response('Deleted',200);
            $recipe = $this->recipe->where("id", "=", "$id")->delete();
