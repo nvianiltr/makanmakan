@@ -8,6 +8,8 @@ use Exception;
 
 class IngredientDetailsController extends Controller
 {
+
+
      protected $data;
     /**
      * Display a listing of the resource.
@@ -19,9 +21,19 @@ class IngredientDetailsController extends Controller
         $this->data = $data;
     }
 
+
     public function index()
     {
-        return IngredientDetails::all();
+        try {
+            $data = $this->data
+                ->with("ingredient")
+                ->get();
+            return response()->json($data, 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
+            return response('Failed', 400);
+        }
     }
 
     /**
@@ -50,7 +62,7 @@ class IngredientDetailsController extends Controller
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response()->json($data,201);
         } 
         catch(Exception $ex) {
             echo $ex; 
@@ -67,7 +79,10 @@ class IngredientDetailsController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->data->where("recipe_id", "=", "$id")->get();
+            $data = $this->data
+                ->where("recipe_id", "=", "$id")
+                ->with("ingredient")
+                ->first();
             return response()->json($data, 200);
         }
         catch (Exception $ex) {

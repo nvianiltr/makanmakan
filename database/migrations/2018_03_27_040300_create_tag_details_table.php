@@ -16,15 +16,16 @@ class CreateTagDetailsTable extends Migration
         Schema::create('tag_details', function (Blueprint $table) {
             $table->integer('recipe_id')->unsigned();
             $table->integer('tag_id')->unsigned();
-            
+
             $table->primary(['recipe_id', 'tag_id']);
             $table->foreign('recipe_id')
-                  ->references('id')->on('recipes')
-                  ->onUpdate('cascade');
+                ->references('id')->on('recipes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->foreign('tag_id')
-                  ->references('id')->on('tag_headers')
-                  ->onUpdate('cascade');
-
+                ->references('id')->on('tag_headers')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

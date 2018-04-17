@@ -55,11 +55,11 @@ class TagDetailsController extends Controller
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response()->json(['message'=>'created'],201);
         } 
         catch(Exception $ex) {
             echo $ex; 
-            return response('Failed', 400);
+            return response()->json(['message'=>$ex], 400);
         }
     }
 
@@ -112,6 +112,13 @@ class TagDetailsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $data = $this->data->where("tag_id", "=", "$id")->delete();
+            return response()->json(['message'=>"deleted"], 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
+            return response()->json(['message'=>'failed'], 400);
+        }
     }
 }
