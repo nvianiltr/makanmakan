@@ -18,7 +18,7 @@ class Review extends Model
 
 	public function recipe()
 	{
-		return $this->belongsTo('App\Models\Recipe');
+		return $this->belongsTo('App\Models\Recipe','id');
 	}
 
 	public function user()

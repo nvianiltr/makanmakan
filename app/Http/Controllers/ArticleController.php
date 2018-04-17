@@ -45,6 +45,22 @@ class ArticleController extends Controller
         //
     }
 
+    public function showPersonalArticle($id)
+    {
+        try {
+            $data = $this->data->where("articles.user_id", "=", "$id")
+                ->join('users', 'users.id', '=', 'articles.user_id')
+                ->select('articles.id', 'articles.title', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                ->get();
+            return response()->json($data, 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
+            return response('Failed', 400);
+        }
+        
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -157,8 +173,10 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         try {
-            $data = $this->data->where("id", "=", "$id")->update(['isDeleted' => true]);;
-            return response('Deleted',200);
+            //$data = $this->data->where("id", "=", "$id")->update(['isDeleted' => true]);;
+            $data = $this->data->where("id", "=", "$id")->delete();
+//            return response('Deleted',200);
+            return response()->json([],201);
         }
         catch(Exception $ex) {
             return response($ex, 400);

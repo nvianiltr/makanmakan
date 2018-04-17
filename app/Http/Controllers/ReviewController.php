@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Models\Recipe;
+use JWTAuth;
 use Exception;
 
 class ReviewController extends Controller
@@ -42,19 +44,21 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
+        $user = JWTAuth::toUser();
+        
          $data = [
             "recipe_id" => $request->recipe_id,
-            "user_id" => $request->user_id,
+            "user_id" => $user->id,
             "content" => $request->content,
             "datePosted" => $request->datePosted
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response(['msg' => 'Created'],201);
         } 
         catch(Exception $ex) {
             echo $ex; 
-            return response('Failed', 400);
+            return response(['msg' => 'Failed'], 400);
         }
     }
 
@@ -67,12 +71,16 @@ class ReviewController extends Controller
     public function show($id)
     {
          try {
-            $data = $this->data->where("id", "=", "$id")->get();
-            return response()->json($data, 200);
+            // $data = $this->data->where("id", "=", "$id")->get();
+            $res = Recipe::where('id',$id)->get();
+            foreach($res as $single) {
+                $single->reviews;
+            }
+            return response()->json($res, 200);
         }
         catch (Exception $ex) {
             echo $ex;
-            return response('Failed', 400);
+            return response(['msg' => 'Failed'], 400);
         }
     }
 

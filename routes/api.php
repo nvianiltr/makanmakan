@@ -81,8 +81,9 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::resource('/Payment','PaymentController');
     Route::resource('/TransactionHeader','TransactionHeaderController');
     Route::resource('/TransactionDetails','TransactionDetailsController');
-    Route::resource('/SavedArticle','SavedArticleController');
-	Route::resource('/SavedRecipe','SavedRecipeController');
+//    Route::resource('/SavedArticle','SavedArticleController');
+//    Route::resource('/SavedArticle','SavedArticleController');
+//	Route::resource('/SavedRecipe','SavedRecipeController');
 
 	//User
 	Route::put('/User/{id}','UserController@update');
@@ -98,6 +99,10 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 	Route::put('/Article/{id}','ArticleController@update');
 	Route::delete('/Article/{id}','ArticleController@destroy');
 	Route::get('/Article/personal/{id}', 'ArticleController@getPersonalArticle');
+
+//Recipe
+	Route::get('/SavedRecipe/{id}','RecipeController@showPersonalRecipe');
+
 
 	//Review
 	Route::post('/Review','ReviewController@store');
