@@ -26,8 +26,7 @@ class RecipeController extends Controller
             $recipe = $this->recipe->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
-                    'recipes.isDeleted')
+                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
         }
@@ -76,10 +75,7 @@ class RecipeController extends Controller
             "servingQty" => $request->servingQty,
             "servingUnit" => $request->servingUnit,
             "preparation" => $request->preparation,
-            "qty" => $request->qty,
-            "price" => $request->price,
             "dateCreated" => $request->dateCreated
-
         ];
         try { 
             $recipe = $this->recipe->create($recipe); 
@@ -105,8 +101,7 @@ class RecipeController extends Controller
                 ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
-                    'recipes.isDeleted')
+                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
                 ->first();
             // $recipe = $this->recipe
             //         ->where('id',$id)
@@ -125,12 +120,11 @@ class RecipeController extends Controller
     public function showPersonalRecipe($id){
        try {
             $recipe = $this->recipe
-                ->where("recipes.id", "=", "$id")
+                ->where("recipes.user_id", "=", "$id")
                 ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
-                    'recipes.isDeleted')
+                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
         }
@@ -149,8 +143,7 @@ class RecipeController extends Controller
                 ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
                 ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.qty','recipes.price', 'recipes.dateCreated',
-                    'recipes.isDeleted')
+                    'recipes.servingQty','recipes.servingUnit','recipes.preparation', 'recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
         }
@@ -190,8 +183,6 @@ class RecipeController extends Controller
                 "servingQty" => $request->servingQty,
                 "servingUnit" => $request->servingUnit,
                 "preparation" => $request->preparation,
-                "qty" => $request->qty,
-                "price" => $request->price,
                 "dateCreated" => $request->dateCreated
             ]);
             $recipe = $this->recipe->where("id", "=", $id)->get();

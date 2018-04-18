@@ -25,7 +25,7 @@ class ArticleController extends Controller
         try {
             $data = $this->data
                 ->join('users', 'users.id', '=', 'articles.user_id')
-                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
                 ->get();
             return response()->json($data, 200);
         }
@@ -45,21 +45,7 @@ class ArticleController extends Controller
         //
     }
 
-    public function showPersonalArticle($id)
-    {
-        try {
-            $data = $this->data->where("articles.user_id", "=", "$id")
-                ->join('users', 'users.id', '=', 'articles.user_id')
-                ->select('articles.id', 'articles.title', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
-                ->get();
-            return response()->json($data, 200);
-        }
-        catch (Exception $ex) {
-            echo $ex;
-            return response('Failed', 400);
-        }
-        
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -108,7 +94,7 @@ class ArticleController extends Controller
          try {
              $data = $this->data->where("articles.id", "=", "$id")
                  ->join('users', 'users.id', '=', 'articles.user_id')
-                 ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                 ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
                  ->first();
              return response()->json($data, 200);
         }
@@ -123,7 +109,7 @@ class ArticleController extends Controller
         try {
             $data = $this->data->where("articles.user_id", "=", "$id")
                 ->join('users', 'users.id', '=', 'articles.user_id')
-                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated', 'articles.isDeleted')
+                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
                 ->get();
             return response()->json($data, 200);
         }
