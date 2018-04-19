@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ReportedReview;
 use Exception;
+use JWTAuth;
 
 class ReportedReviewController extends Controller
 {
@@ -25,7 +26,7 @@ class ReportedReviewController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new .
      *
      * @return \Illuminate\Http\Response
      */
@@ -42,19 +43,19 @@ class ReportedReviewController extends Controller
      */
     public function store(Request $request)
     {
+        $user = JWTAuth::toUser();
          $data = [
             "review_id" => $request->review_id,
-            "user_id" => $request->user_id,
+            "user_id" => $user->id, 
             "reason" => $request->reason,
             "dateReported" => $request->dateReported
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response(['msg'=>'Created'],201);
         } 
         catch(Exception $ex) {
-            echo $ex; 
-            return response('Failed', 400);
+            return response(['msg'=>'You may only send report once.'], 400);
         }
     }
 

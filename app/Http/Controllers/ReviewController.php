@@ -23,7 +23,14 @@ class ReviewController extends Controller
 
     public function index()
     {
-        return Review::all();
+        $reviews = Review::all();
+        foreach($reviews as $review){
+            $review->user;
+        }
+
+        return response()->json($reviews,200);
+
+        // return Review::all();
     }
 
     /**
