@@ -110,10 +110,13 @@ class TagDetailsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($tag_id,$recipe_id)
     {
         try {
-            $data = $this->data->where("tag_id", "=", "$id")->delete();
+            $data = $this->data
+                ->where("tag_id", "=", "$tag_id")
+                ->where('recipe_id',$recipe_id)
+                ->delete();
             return response()->json(['message'=>"deleted"], 200);
         }
         catch (Exception $ex) {

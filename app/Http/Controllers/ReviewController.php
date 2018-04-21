@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\Recipe;
 use JWTAuth;
 use Exception;
+use Validator;
 
 class ReviewController extends Controller
 {
@@ -44,17 +45,25 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $user = JWTAuth::toUser();
-        
+        $credentials = $request->only('content');
+
+        $rules = [
+            'content' => 'required'
+        ];
+        $validator = Validator::make($credentials,$rules);
+        if($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()->first()],422);
+        }
+
          $data = [
             "recipe_id" => $request->recipe_id,
-            "user_id" => $user->id,
+            "user_id" => $request->user_id,
             "content" => $request->content,
             "datePosted" => $request->datePosted
         ];
         try { 
             $data = $this->data->create($data); 
-            return response(['msg' => 'Created'],201);
+            return response()->json(['msg' => 'Created'],201);
         } 
         catch(Exception $ex) {
             echo $ex; 
@@ -71,12 +80,12 @@ class ReviewController extends Controller
     public function show($id)
     {
          try {
-            // $data = $this->data->where("id", "=", "$id")->get();
-            $res = Recipe::where('id',$id)->get();
-            foreach($res as $single) {
-                $single->reviews;
-            }
-            return response()->json($res, 200);
+            $data = $this->data->where("recipe_id", "$id")->get();
+//            $res = Recipe::where('id',$id)->get();
+//            foreach($res as $single) {
+//                $single->reviews;
+//            }
+            return response()->json($data, 200);
         }
         catch (Exception $ex) {
             echo $ex;

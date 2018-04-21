@@ -48,11 +48,11 @@ class SavedRecipeController extends Controller
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response()->json(['msg'=>'Created'],201);
         } 
         catch(Exception $ex) {
-            echo $ex; 
-            return response('Failed', 400);
+            echo $ex;
+            return response()->json(['msg'=>'Failed'],400);
         }
     }
 
@@ -65,10 +65,14 @@ class SavedRecipeController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->data->where("user_id", "=", "$id")->get();
-            return response()->json($data, 200);
-        }
-        catch (Exception $ex) {
+            $recipe = $this->data
+                ->where("saved_recipes.user_id", "$id")
+                ->join('recipes', 'recipes.id', 'saved_recipes.recipe_id')
+                ->join('users', 'users.id', '=', 'recipes.user_id')
+                ->select('recipes.id', 'recipes.title', 'recipes.user_id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL','recipes.dateCreated')
+                ->get();
+            return response()->json($recipe, 200);
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
@@ -94,18 +98,6 @@ class SavedRecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $data = $this->data->find($id)->update([
-                "article_id" => $request->article_id,
-                "user_id" => $request->user_id
-            ]);
-            $data = $this->data->where("id", "=", $id)->get();
-
-            return response()->json($data,200);
-        }
-        catch(Exception $ex) {
-            return response()->json($ex, 400);
-        }
     }
 
     /**
@@ -114,14 +106,17 @@ class SavedRecipeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($user_id, $recipe_id)
     {
-        // try {
-        //     $data = $this->data->where("article_id", "=", "$id")->update(['isDeleted' => true]);;
-        //     return response('Deleted',200);
-        // }
-        // catch(Exception $ex) {
-        //     return response($ex, 400);
-        // }
+        try {
+            $data = $this->data
+                ->where('user_id', $user_id)
+                ->where('recipe_id',$recipe_id)
+                ->delete();
+            return response()->json(["status"=>"deleted"],201);
+        }
+        catch(Exception $ex) {
+            return response($ex, 400);
+        }
     }
 }

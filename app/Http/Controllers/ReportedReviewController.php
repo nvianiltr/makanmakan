@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ReportedReview;
 use Exception;
-
+use Validator;
 class ReportedReviewController extends Controller
 {
     protected $data;
@@ -42,6 +42,15 @@ class ReportedReviewController extends Controller
      */
     public function store(Request $request)
     {
+        $credentials = $request->only('reason');
+
+        $rules = [
+            'reason' => 'required'
+        ];
+        $validator = Validator::make($credentials,$rules);
+        if($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()->first()],422);
+        }
          $data = [
             "review_id" => $request->review_id,
             "user_id" => $request->user_id,
@@ -50,7 +59,7 @@ class ReportedReviewController extends Controller
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response()->json(['msg'=>'Created'],201);
         } 
         catch(Exception $ex) {
             echo $ex; 

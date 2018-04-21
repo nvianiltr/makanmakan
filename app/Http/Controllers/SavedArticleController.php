@@ -48,7 +48,7 @@ class SavedArticleController extends Controller
         ];
         try { 
             $data = $this->data->create($data); 
-            return response('Created',201);
+            return response()->json(['msg'=>'Created'],201);
         } 
         catch(Exception $ex) {
             echo $ex; 
@@ -65,10 +65,14 @@ class SavedArticleController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->data->where("user_id", "=", "$id")->get();
-            return response()->json($data, 200);
-        }
-        catch (Exception $ex) {
+            $recipe = $this->data
+                ->where("saved_articles.user_id", "$id")
+                ->join('articles', 'articles.id', 'saved_articles.article_id')
+                ->join('users', 'users.id', '=', 'articles.user_id')
+                ->select('articles.id', 'articles.title', 'articles.user_id AS user_id', 'users.username','articles.imageURL')
+                ->get();
+            return response()->json($recipe, 200);
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
@@ -114,14 +118,17 @@ class SavedArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($user_id,$article_id)
     {
-        // try {
-        //     $data = $this->data->where("article_id", "=", "$id")->update(['isDeleted' => true]);;
-        //     return response('Deleted',200);
-        // }
-        // catch(Exception $ex) {
-        //     return response($ex, 400);
-        // }
+        try {
+            $data = $this->data
+                ->where('user_id', $user_id)
+                ->where('article_id',$article_id)
+                ->delete();
+            return response()->json(["status"=>"deleted"],201);
+        }
+        catch(Exception $ex) {
+            return response($ex, 400);
+        }
     }
 }

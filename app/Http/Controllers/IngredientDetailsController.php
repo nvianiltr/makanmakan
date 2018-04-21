@@ -81,8 +81,8 @@ class IngredientDetailsController extends Controller
         try {
             $data = $this->data
                 ->where("recipe_id", "=", "$id")
-                ->with("ingredient")
-                ->first();
+                ->join('ingredients', 'ingredients.id','=','ingredient_details.ingredient_id')
+                ->get();
             return response()->json($data, 200);
         }
         catch (Exception $ex) {
@@ -102,6 +102,7 @@ class IngredientDetailsController extends Controller
         //
     }
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -111,20 +112,23 @@ class IngredientDetailsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // try {
-        //     $data = $this->data->find($id)->update([
-        //         "recipe_id" => $request->recipe_id,
-        //         "ingredient_id" => $request->ingredient_id,
-        //         "quantity" => $request->quantity,
-        //         "unit" => $request->unit
-        //     ]);
-        //     $data = $this->data->where("id", "=", $id)->get();
+         try {
+             $data = $this->data
+                 ->where("ingredient_id", $id)
+                 ->where('recipe_id',$request->recipe_id)
+                 ->update([
+                 "recipe_id" => $request->recipe_id,
+                 "ingredient_id" => $request->ingredient_id,
+                 "quantity" => $request->quantity,
+                 "unit" => $request->unit
+             ]);
+             $data = $this->data->where("ingredient_id", "=", $id)->get();
 
-        //     return response()->json($data,200);
-        // }
-        // catch(Exception $ex) {
-        //     return response()->json($ex, 400);
-        // }
+             return response()->json($data,200);
+         }
+         catch(Exception $ex) {
+             return response()->json($ex, 400);
+         }
     }
 
     /**
@@ -133,14 +137,17 @@ class IngredientDetailsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($ingredient_id, $recipe_id)
     {
-        // try {
-        //     $data = $this->data->where("recipe_id", "=", "$id")->update(['isDeleted' => true]);;
-        //     return response('Deleted',200);
-        // }
-        // catch(Exception $ex) {
-        //     return response($ex, 400);
-        // }
+         try {
+             $data = $this->data
+                 ->where("ingredient_id", $ingredient_id)
+                 ->where('recipe_id',$recipe_id)
+                 ->delete();
+             return response()->json(["status"=>"deleted"],201);
+         }
+         catch(Exception $ex) {
+             return response($ex, 400);
+         }
     }
 }

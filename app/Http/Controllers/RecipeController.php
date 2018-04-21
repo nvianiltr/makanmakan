@@ -15,7 +15,8 @@ class RecipeController extends Controller
 {
     protected $recipe;
 
-    public function __construct(Recipe $recipe){
+    public function __construct(Recipe $recipe)
+    {
         $this->recipe = $recipe;
     }
 
@@ -23,14 +24,15 @@ class RecipeController extends Controller
     public function index()
     {
         try {
-            $recipe = $this->recipe->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
+            $recipe = $this->recipe
+                ->latest('recipes.dateCreated')
+                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
-                ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
+                ->select('recipes.id', 'recipes.title', 'users.id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL',
+                    'recipes.servingQty', 'recipes.servingUnit', 'recipes.preparation', 'recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
@@ -49,25 +51,25 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
 
     //create a new recipe
     public function store(Request $request)
     {
-        $credentials = $request->only('title','preparation');
+        $credentials = $request->only('title', 'preparation');
 
         $rules = [
             'title' => 'required',
             'preparation' => 'required'
         ];
-        $validator = Validator::make($credentials,$rules);
-        if($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()->first()],422);
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->messages()->first()], 422);
         }
 
-         $recipe = [
+        $recipe = [
             "user_id" => $request->user_id,
             "title" => $request->title,
             "about" => $request->about,
@@ -77,20 +79,19 @@ class RecipeController extends Controller
             "preparation" => $request->preparation,
             "dateCreated" => $request->dateCreated
         ];
-        try { 
-            $recipe = $this->recipe->create($recipe); 
-            return response()->json($recipe,201);
-        } 
-        catch(Exception $ex) {
-            echo $ex; 
-            return response()->json(['success'=> false, 'error'=> $validator->messages()->first()],400);
+        try {
+            $recipe = $this->recipe->create($recipe);
+            return response()->json($recipe, 201);
+        } catch (Exception $ex) {
+            echo $ex;
+            return response()->json(['success' => false, 'error' => $validator->messages()->first()], 400);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -98,66 +99,79 @@ class RecipeController extends Controller
         try {
             $recipe = $this->recipe
                 ->where("recipes.id", "=", "$id")
-                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
+                ->with(array('ingredientDetails' => function ($query) {
+                    $query
+                        ->join('ingredients', 'ingredients.id', '=', 'ingredient_details.ingredient_id')
+                        ->get();
+                }))
+                ->with('tagDetails.tagHeader', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
-                ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
+                ->select('recipes.id', 'recipes.title', 'users.id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL',
+                    'recipes.servingQty', 'recipes.servingUnit', 'recipes.preparation', 'recipes.dateCreated')
                 ->first();
-            // $recipe = $this->recipe
-            //         ->where('id',$id)
-            //         ->first();
-            $recipe->tagDetails;
-            $recipe->ingredientDetails;
-            $recipe->reviews;
             return response()->json($recipe, 200);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
     }
 
-    public function showPersonalRecipe($id){
-       try {
+    public function showPersonalRecipe($id)
+    {
+        try {
             $recipe = $this->recipe
+                ->latest('recipes.dateCreated')
                 ->where("recipes.user_id", "=", "$id")
-                ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
-                ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation','recipes.dateCreated')
+                ->select('recipes.id', 'recipes.title', 'users.id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL','recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
     }
 
-    public function search($name){
+    public function getUserRecipe($username)
+    {
         try {
-            $recipe=$this->recipe->where('recipes.title', 'LIKE', "%$name%")
-                ->orWhereHas('tagDetails.tagHeader', function($query) use ($name){
+            $recipe = $this->recipe
+                ->latest('recipes.dateCreated')
+                ->where("users.username", "=", "$username")
+                ->join('users', 'users.id', '=', 'recipes.user_id')
+                ->select('recipes.id', 'recipes.title', 'users.id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL','recipes.dateCreated')
+                ->get();
+            return response()->json($recipe, 200);
+        } catch (Exception $ex) {
+            echo $ex;
+            return response('Failed', 400);
+        }
+    }
+
+    public function search($name)
+    {
+        try {
+            $recipe = $this->recipe->where('recipes.title', 'LIKE', "%$name%")
+                ->orWhereHas('tagDetails.tagHeader', function ($query) use ($name) {
                     $query->where('name', $name);
                 })
+                ->orWhere('users.username', 'LIKE', "%$name%")
                 ->with('tagDetails.tagHeader', 'ingredientDetails.ingredient', 'reviews.user')
                 ->join('users', 'users.id', '=', 'recipes.user_id')
-                ->select('recipes.id', 'recipes.title', 'users.username','recipes.about','recipes.pictureURL',
-                    'recipes.servingQty','recipes.servingUnit','recipes.preparation', 'recipes.dateCreated')
+                ->select('recipes.id', 'recipes.title', 'users.id AS user_id', 'users.username', 'recipes.about', 'recipes.pictureURL',
+                    'recipes.servingQty', 'recipes.servingUnit', 'recipes.preparation', 'recipes.dateCreated')
                 ->get();
             return response()->json($recipe, 200);
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             echo $ex;
             return response('Failed', 400);
         }
     }
-
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -168,13 +182,24 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-         try {
+        $credentials = $request->only('title', 'preparation');
+
+        $rules = [
+            'title' => 'required',
+            'preparation' => 'required'
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->messages()->first()], 422);
+        }
+
+        try {
             $recipe = $this->recipe->find($id)->update([
                 "user_id" => $request->user_id,
                 "title" => $request->title,
@@ -185,11 +210,9 @@ class RecipeController extends Controller
                 "preparation" => $request->preparation,
                 "dateCreated" => $request->dateCreated
             ]);
-            $recipe = $this->recipe->where("id", "=", $id)->get();
 
-            return response()->json($recipe,200);
-        }
-        catch(Exception $ex) {
+            return response()->json($this->show($id)->original, 200);
+        } catch (Exception $ex) {
             return response()->json($ex, 400);
         }
     }
@@ -197,7 +220,7 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -206,10 +229,9 @@ class RecipeController extends Controller
 
 //            $recipe = $this->recipe->where("id", "=", "$id")->update(['isDeleted' => true]);;
 //            return response('Deleted',200);
-           $recipe = $this->recipe->where("id", "=", "$id")->delete();
-           return response()->json([],201);
-        }
-        catch(Exception $ex) {
+            $recipe = $this->recipe->where("id", "=", "$id")->delete();
+            return response()->json([], 201);
+        } catch (Exception $ex) {
             return response($ex, 400);
         }
     }

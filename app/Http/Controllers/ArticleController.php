@@ -24,6 +24,7 @@ class ArticleController extends Controller
     {
         try {
             $data = $this->data
+                ->latest('articles.dateCreated')
                 ->join('users', 'users.id', '=', 'articles.user_id')
                 ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
                 ->get();
@@ -107,7 +108,26 @@ class ArticleController extends Controller
     public function getPersonalArticle ($id)
     {
         try {
-            $data = $this->data->where("articles.user_id", "=", "$id")
+            $data = $this->data
+                ->latest('articles.dateCreated')
+                ->where("articles.user_id", "=", "$id")
+                ->join('users', 'users.id', '=', 'articles.user_id')
+                ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
+                ->get();
+            return response()->json($data, 200);
+        }
+        catch (Exception $ex) {
+            echo $ex;
+            return response('Failed', 400);
+        }
+    }
+
+    public function getUserArticle ($username)
+    {
+        try {
+            $data = $this->data
+                ->latest('articles.dateCreated')
+                ->where("users.username", "=", "$username")
                 ->join('users', 'users.id', '=', 'articles.user_id')
                 ->select('articles.id', 'articles.title', 'users.id AS user_id', 'users.username','articles.content','articles.imageURL','articles.dateCreated')
                 ->get();

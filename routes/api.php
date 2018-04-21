@@ -16,58 +16,49 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 //User
-Route::get('/User','UserController@index');
-Route::get('/User/{id}','UserController@show');
-Route::get('/UserwithArticle/{id}','UserController@showWithArticle');
-Route::get('/UserwithRecipe/{id}','UserController@showWithRecipe');
-Route::get('/UserwithSavedArticle/{id}','UserController@showWithSavedArticle');
+//Route::get('/User','UserController@index');
+//Route::get('/User/{id}','UserController@show');
 
 //Recipe
 Route::get('/Recipe','RecipeController@index');
 Route::get('/Recipe/{id}','RecipeController@show');
-Route::get('/RecipeFK/{id}','RecipeController@showFK');
 Route::get('/Recipe/search/{name}','RecipeController@search');
+Route::get('/Recipe/user/{name}', 'RecipeController@getUserRecipe');
 
 //Article
 Route::get('/Article','ArticleController@index');
 Route::get('/Article/{id}','ArticleController@show');
-Route::get('/ArticleFK/{id}','ArticleController@showFK');
+Route::get('/Article/user/{name}', 'ArticleController@getUserArticle');
 
 //Review
 Route::get('/Review','ReviewController@index');
 Route::get('/Review/{id}','ReviewController@show');
-Route::get('/ReviewFK/{id}','ReviewController@showFK');
 
 //ReportedReview
 Route::get('/ReportedReview','ReportedReviewController@index');
 Route::get('/ReportedReview/{id}','ReportedReviewController@show');
 
-
 //Ingredient
 Route::get('/Ingredient','IngredientController@index');
 Route::get('/Ingredient/{id}','IngredientController@show');
 
-
 //IngredientDetails
 Route::get('/IngredientDetails','IngredientDetailsController@index');
-Route::get('/IngredientDetails/{id}','IngredientDetailsController@show');
-
+Route::get('/Recipe/IngredientDetails/{id}','IngredientDetailsController@show');
 
 //TagDetails
 Route::get('/TagDetails','TagDetailsController@index');
 Route::get('/TagDetails/{id}','TagDetailsController@show');
 
-
 //TagHeader
 Route::get('/TagHeader','TagHeaderController@index');
 Route::get('/TagHeader/{id}','TagHeaderController@show');
 
-
 //TagCategory
 Route::get('/TagCategory','TagCategoryController@index');
 Route::get('/TagCategory/{id}','TagCategoryController@show');
-
 
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
@@ -78,12 +69,6 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('test', function(){
         return response()->json(['foo'=>'bar']);
     });
-    Route::resource('/Payment','PaymentController');
-    Route::resource('/TransactionHeader','TransactionHeaderController');
-    Route::resource('/TransactionDetails','TransactionDetailsController');
-//    Route::resource('/SavedArticle','SavedArticleController');
-//    Route::resource('/SavedArticle','SavedArticleController');
-//	Route::resource('/SavedRecipe','SavedRecipeController');
 
 	//User
 	Route::put('/User/{id}','UserController@update');
@@ -98,11 +83,16 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 	Route::post('/Article','ArticleController@store');
 	Route::put('/Article/{id}','ArticleController@update');
 	Route::delete('/Article/{id}','ArticleController@destroy');
-	Route::get('/Article/personal/{id}', 'ArticleController@getPersonalArticle');
+    Route::post('/Article/saved-article', 'SavedArticleController@store');
+    Route::get('/Article/saved-article/{id}', 'SavedArticleController@show');
+    Route::delete('/Article/saved-article/{user_id}/{article_id}','SavedArticleController@destroy');
+    Route::get('/Article/personal-article/{id}', 'ArticleController@getPersonalArticle');
 
-//Recipe
-	Route::get('/SavedRecipe/{id}','RecipeController@showPersonalRecipe');
-
+    //Recipe
+    Route::post('/Recipe/saved-recipe', 'SavedRecipeController@store');
+    Route::get('/Recipe/saved-recipe/{id}', 'SavedRecipeController@show');
+    Route::delete('/Recipe/saved-recipe/{user_id}/{recipe_id}','SavedRecipeController@destroy');
+    Route::get('/Recipe/personal-recipe/{id}','RecipeController@showPersonalRecipe');
 
 	//Review
 	Route::post('/Review','ReviewController@store');
@@ -122,12 +112,12 @@ Route::group(['middleware' => ['jwt.auth']], function() {
 	//IngredientDetails
 	Route::post('/Recipe/IngredientDetails','IngredientDetailsController@store');
 	Route::put('/Recipe/IngredientDetails/{id}','IngredientDetailsController@update');
-	Route::delete('/Recipe/IngredientDetails/{id}','IngredientDetailsController@destroy');
+	Route::delete('/Recipe/IngredientDetails/{ingredient_id}/{recipe_id}','IngredientDetailsController@destroy');
 
 	//TagDetails
 	Route::post('/Recipe/TagDetails','TagDetailsController@store');
 	Route::put('/Recipe/TagDetails/{id}','TagDetailsController@update');
-	Route::delete('/Recipe/TagDetails/{id}','TagDetailsController@destroy');
+	Route::delete('/Recipe/TagDetails/{tag_id}/{recipe_id}','TagDetailsController@destroy');
 
 	//TagHeader
 	Route::post('/TagHeader','TagHeaderController@store');
