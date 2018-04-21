@@ -25,7 +25,7 @@ class ReportedReviewController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new .
      *
      * @return \Illuminate\Http\Response
      */
@@ -53,7 +53,7 @@ class ReportedReviewController extends Controller
         }
          $data = [
             "review_id" => $request->review_id,
-            "user_id" => $request->user_id,
+            "user_id" => $user->id, 
             "reason" => $request->reason,
             "dateReported" => $request->dateReported
         ];
@@ -62,8 +62,7 @@ class ReportedReviewController extends Controller
             return response()->json(['msg'=>'Created'],201);
         } 
         catch(Exception $ex) {
-            echo $ex; 
-            return response('Failed', 400);
+            return response(['msg'=>'You may only send report once.'], 400);
         }
     }
 
