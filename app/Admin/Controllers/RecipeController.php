@@ -82,8 +82,6 @@ class RecipeController extends Controller
             $grid->servingQty('Serving Quantity');
             $grid->servingUnit('Serving Unit');
             $grid->preparation();
-            $grid->qty('Quantity');
-            $grid->price();
             $grid->dateCreated();
         });
     }
@@ -104,8 +102,6 @@ class RecipeController extends Controller
             $form->text('servingQty');
             $form->text('servingUnit');
             $form->text('preparation');
-            $form->text('qty','Quantity');
-            $form->text('price');
             $form->text('dateCreated');
 
             
