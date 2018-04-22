@@ -17,9 +17,9 @@ Route::group([
     $router->resource('/Review',ReviewController::class);//here
     $router->resource('/Ingredient',IngredientController::class);
     $router->resource('/TagCategory',TagCategoryController::class);
-    $router->resource('/IngredientDetails',IngredientDetailsController::class);
+    $router->resource('/IngredientDetail',IngredientDetailsController::class);
     $router->resource('/ReportedReview',ReportedReviewController::class);
-    $router->resource('/TagDetails',TagDetailsController::class);	
+    $router->resource('/TagDetail',TagDetailsController::class);	
     $router->resource('/TagHeader',TagHeaderController::class);
 
 
