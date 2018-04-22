@@ -17,10 +17,10 @@ Route::group([
     $router->resource('/Review',ReviewController::class);//here
     $router->resource('/Ingredient',IngredientController::class);
     $router->resource('/TagCategory',TagCategoryController::class);
-    $router->resource('/IngredientDetail',IngredientDetailsController::class);
     $router->resource('/ReportedReview',ReportedReviewController::class);
-    $router->resource('/TagDetail',TagDetailsController::class);	
     $router->resource('/TagHeader',TagHeaderController::class);
+    $router->resource('/IngredientDetail',IngredientDetailsController::class);
+    $router->resource('/TagDetail',TagDetailsController::class);   
 
 
 
