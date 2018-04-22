@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\TagDetails;
 use App\Models\Recipe;
-use App\Models\TagHeader
+use App\Models\TagHeader;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
