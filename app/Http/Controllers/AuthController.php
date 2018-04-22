@@ -42,16 +42,16 @@ class AuthController extends Controller
         $email = $request->email;   
         $password = $request->password;
         
-        $user = User::create(['firstName' => $firstName,'lastName' => $lastName, 'username' => $username , 'email' => $email, 'password' => Hash::make($password)]);
+        $user = User::create(['firstName' => $firstName,'lastName' => $lastName, 'username' => $username , 'email' => $email, 'password' => Hash::make($password), 'isVerified' => 1]);
         $verification_code = str_random(30); //Generate verification code
         DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
-        $subject = "Please verify your email address.";
-        Mail::send('verify', ['firstName' => $firstName, 'verification_code' => $verification_code],
-            function($mail) use ($email, $firstName, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "makanmakan");
-                $mail->to($email, $firstName);
-                $mail->subject($subject);
-            });
+        // $subject = "Please verify your email address.";
+        // Mail::send('verify', ['firstName' => $firstName, 'verification_code' => $verification_code],
+        //     function($mail) use ($email, $firstName, $subject){
+        //         $mail->from(getenv('MAIL_USERNAME'), "makanmakan");
+        //         $mail->to($email, $firstName);
+        //         $mail->subject($subject);
+        //     });
 
         return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email to complete your registration.'],200);
     }
