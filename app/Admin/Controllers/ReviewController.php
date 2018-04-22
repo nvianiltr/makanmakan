@@ -77,7 +77,7 @@ class ReviewController extends Controller
 
             $grid->id('ID')->sortable();
             $grid->recipe_id('Recipe')->display(function($Recipe){ return 
-                User::find($Recipe)->title;});
+                Recipe::find($Recipe)->title;});
             $grid->user_id('User')->display(function($User){ return 
                 User::find($User)->username;});
             $grid->content();
