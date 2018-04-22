@@ -20,7 +20,7 @@ Route::group([
     $router->resource('/ReportedReview',ReportedReviewController::class);
     $router->resource('/TagHeader',TagHeaderController::class);
     $router->resource('/Ingredients',IngredientDetailsController::class);
-    $router->resource('/Tag',TagDetailsController::class);   
+    $router->resource('/Tag',TagDetailsController::class);
 
 
 
