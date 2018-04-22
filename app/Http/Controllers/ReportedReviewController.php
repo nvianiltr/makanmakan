@@ -53,7 +53,7 @@ class ReportedReviewController extends Controller
         }
          $data = [
             "review_id" => $request->review_id,
-            "user_id" => $user->id, 
+            "user_id" => $request->user_id,
             "reason" => $request->reason,
             "dateReported" => $request->dateReported
         ];
