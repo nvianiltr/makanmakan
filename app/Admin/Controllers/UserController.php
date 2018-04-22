@@ -93,11 +93,11 @@ class UserController extends Controller
         return Admin::form(User::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->display('firstName','First Name');
-            $form->display('lastName','Last Name');
-            $form->display('username');
+            $form->text('firstName','First Name');
+            $form->text('lastName','Last Name');
+            $form->text('username');
             $form->display('email');
-            $form->display('isVerified');
+            $form->text('isVerified');
         });
     }
 }
