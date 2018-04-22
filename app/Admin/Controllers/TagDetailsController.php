@@ -75,10 +75,10 @@ class TagDetailsController extends Controller
     {
         return Admin::grid(TagDetails::class, function (Grid $grid) {
 
-            $grid->recipe_id('Recipe')->display(function($Recipe){ return 
-                Recipe::find($Recipe)->title;});
-            $grid->tag_id('Tag')->display(function($TagHeader){ return 
-                TagHeader::find($Ingredient)->name;});
+             $grid->recipe_id('Recipe')->display(function($Recipe){ return 
+                 Recipe::find($Recipe)->title;});
+             $grid->tag_id('Tag')->display(function($TagHeader){ return 
+                 TagHeader::find($TagHeader)->name;});
 
 
         });
@@ -94,7 +94,7 @@ class TagDetailsController extends Controller
         return Admin::form(TagDetails::class, function (Form $form) {
 
             $form->select('recipe_id','Recipe')->options(function($recipe_id){ return Recipe::all()->pluck('title','id');});
-            $form->select('tag_id','Tag')->options(function($tag_id){ return TagHeader::all()->pluck('name','id');});
+            $form->select('tag_id','Tag')->options(function($tag_id){ return TagHeader::all()->pluck('name','id');}); 
 
         });
     }
