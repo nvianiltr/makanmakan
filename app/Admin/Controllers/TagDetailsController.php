@@ -76,9 +76,9 @@ class TagDetailsController extends Controller
         return Admin::grid(TagDetails::class, function (Grid $grid) {
 
             $grid->recipe_id('Recipe')->display(function($Recipe){ return 
-                User::find($Recipe)->title;});
+                Recipe::find($Recipe)->title;});
             $grid->tag_id('Tag')->display(function($TagHeader){ return 
-                User::find($Ingredient)->name;});
+                TagHeader::find($Ingredient)->name;});
 
 
         });

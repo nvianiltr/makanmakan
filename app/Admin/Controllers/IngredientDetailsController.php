@@ -76,9 +76,9 @@ class IngredientDetailsController extends Controller
         return Admin::grid(IngredientDetails::class, function (Grid $grid) {
 
             $grid->recipe_id('Recipe')->display(function($Recipe){ return 
-                User::find($Recipe)->title;});
+                Recipe::find($Recipe)->title;});
             $grid->ingredient_id('Ingredient')->display(function($Ingredient){ return 
-                User::find($Ingredient)->name;});
+                Ingredient::find($Ingredient)->name;});
             $grid->quantity();
             $grid->unit();
         });
